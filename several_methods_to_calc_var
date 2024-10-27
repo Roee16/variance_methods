@@ -1,0 +1,103 @@
+# here I present several methods to calculate variance
+
+import numpy as np
+import pandas as pd
+from arch import arch_model
+
+# Sample stock prices
+stock_prices = np.array([100, 102, 105, 110, 108])
+
+# Standard Deviation
+std_dev = np.std(stock_prices, ddof=1)
+print(f"Standard Deviation: {std_dev}")
+
+# Variance
+variance = np.var(stock_prices, ddof=1)
+print(f"Variance: {variance}")
+
+# Beta (Assuming comparison with a market index, returns, not prices)
+
+
+# Sample data
+stock_returns = np.array([0.05, 0.02, -0.01, 0.04, 0.03])
+market_returns = np.array([0.03, 0.01, -0.02, 0.05, 0.02])
+
+# Covariance
+covariance = np.cov(stock_returns, market_returns)[0, 1]
+
+# Variance of market returns
+market_variance = np.var(market_returns, ddof=1)
+
+# Beta
+beta = covariance / market_variance
+print(f"Beta: {beta}")
+
+# Bollinger Bands
+# Sample stock prices
+data = {'Price': [100, 102, 105, 110, 108]}
+df = pd.DataFrame(data)
+
+# Bollinger Bands
+rolling_mean = df['Price'].rolling(window=20).mean()
+rolling_std = df['Price'].rolling(window=20).std()
+df['Upper Band'] = rolling_mean + (rolling_std * 2)
+df['Lower Band'] = rolling_mean - (rolling_std * 2)
+
+print(df)
+
+# Maximum Drawdown
+
+# Maximum Drawdown
+drawdown = (np.max(stock_prices) - np.min(stock_prices)) / np.max(stock_prices)
+print(f"Maximum Drawdown: {drawdown}")
+
+# Value at Risk (VaR)
+
+# Sample stock returns
+stock_returns = np.array([-0.05, 0.02, -0.01, 0.04, 0.03])
+
+# Value at Risk (VaR)
+confidence_level = 0.95
+VaR = np.percentile(stock_returns, (1 - confidence_level) * 100)
+print(f"Value at Risk (VaR): {VaR}"
+
+# Sharpe Ratio
+
+# Sample data
+stock_returns = np.array([0.05, 0.02, -0.01, 0.04, 0.03])
+risk_free_rate = 0.01
+
+# Sharpe Ratio
+excess_returns = stock_returns - risk_free_rate
+sharpe_ratio = np.mean(excess_returns) / np.std(excess_returns, ddof=1)
+print(f"Sharpe Ratio: {sharpe_ratio}")
+
+# Volatility Index (VIX)
+
+# Historical Volatility
+historical_volatility = np.std(stock_returns) * np.sqrt(252)  # Annualized
+print(f"Historical Volatility (approximation for VIX): {historical_volatility}")
+
+# Average True Range (ATR)
+
+# Sample stock data
+data = {'High': [105, 106, 107, 108, 109], 'Low': [95, 96, 97, 98, 99], 'Close': [100, 102, 104, 106, 108]}
+df = pd.DataFrame(data)
+
+# Average True Range (ATR)
+df['TR'] = df[['High', 'Low', 'Close']].apply(lambda row: max(row['High'] - row['Low'], abs(row['High'] - row['Close']), abs(row['Low'] - row['Close'])), axis=1)
+df['ATR'] = df['TR'].rolling(window=14).mean()
+print(df)
+
+# GARCH Models
+
+# Sample stock returns
+stock_returns = np.array([0.05, 0.02, -0.01, 0.04, 0.03])
+
+# GARCH Model
+returns = pd.Series(stock_returns)
+model = arch_model(returns, vol='Garch', p=1, q=1)
+model_fit = model.fit(disp='off')
+print(model_fit.summary())
+
+
